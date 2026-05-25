@@ -73,6 +73,21 @@ namespace alecUtils {
     let _exitStates: number[] = []
     let _exitFns: (() => void)[] = []
     let _anyChangeFns: ((oldState: number, newState: number) => void)[] = []
+    let _updateStates: number[] = []
+    let _updateFns: (() => void)[] = []
+    let _updateDriverInstalled = false
+
+    function _installUpdateDriver() {
+        if (_updateDriverInstalled) return
+        _updateDriverInstalled = true
+        game.onUpdate(function () {
+            for (let i = 0; i < _updateStates.length; i++) {
+                if (_updateStates[i] === _currentState) {
+                    _updateFns[i]()
+                }
+            }
+        })
+    }
 
     /**
      * Transition to a new state. Fires exit handlers for the old state,
@@ -156,6 +171,20 @@ namespace alecUtils {
     export function onStateExited(state: number, handler: () => void): void {
         _exitStates.push(state)
         _exitFns.push(handler)
+    }
+
+    /**
+     * Run code every frame, but only while the machine is in the given state.
+     * The handler is skipped (not called) when the current state is anything else.
+     */
+    //% block="on game update in state $state"
+    //% state.shadow="alecutils_state_enum_shim"
+    //% weight=52
+    //% group="State Machine"
+    export function onUpdateInState(state: number, handler: () => void): void {
+        _installUpdateDriver()
+        _updateStates.push(state)
+        _updateFns.push(handler)
     }
 
     /**

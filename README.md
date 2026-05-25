@@ -20,6 +20,7 @@ Single global state machine for the whole project. States are defined dynamicall
 - `alecUtils.timeInCurrentState()` — milliseconds since the current state was entered. Great for time-based transitions like "after 2s in idle, wander."
 - `alecUtils.onStateEntered(state, handler)` — runs when the machine enters this state.
 - `alecUtils.onStateExited(state, handler)` — runs when the machine leaves this state.
+- `alecUtils.onUpdateInState(state, handler)` — runs every frame, but only while the machine is in this state. State-scoped equivalent of `game.onUpdate`. Useful for movement, animation, AI ticks, and anything else that should pause when the state changes.
 - `alecUtils.onAnyStateChange(handler)` — runs on every transition. Handler receives `oldState` and `newState` as draggable reporter arguments. On the first transition `oldState` is `-1`.
 
 ## Example
@@ -50,9 +51,14 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     alecUtils.setState(StateKind.Running)
 })
 
+// Cleaner per-state update: only runs while in Running:
+alecUtils.onUpdateInState(StateKind.Running, function () {
+    player.vx = 60   // move every frame while running
+})
+
 // Time-based transition:
-game.onUpdate(function () {
-    if (alecUtils.isInState(StateKind.Idle) && alecUtils.timeInCurrentState() > 2000) {
+alecUtils.onUpdateInState(StateKind.Idle, function () {
+    if (alecUtils.timeInCurrentState() > 2000) {
         alecUtils.setState(StateKind.Running)
     }
 })
@@ -63,7 +69,7 @@ game.onUpdate(function () {
 Open https://arcade.makecode.com/, click the gear → **Extensions**, and paste:
 
 ```
-https://github.com/atc123guy/pxt-alec-utils#v0.2.0
+https://github.com/atc123guy/pxt-alec-utils#v0.3.0
 ```
 
 Always pin to a specific tag with `#vX.Y.Z` to avoid MakeCode's aggressive caching.

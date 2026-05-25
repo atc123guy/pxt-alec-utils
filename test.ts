@@ -39,3 +39,14 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     alecUtils.setState(RUNNING)
 })
+
+// Per-state update: count frames spent in RUNNING, splash on exit.
+let runningTicks = 0
+alecUtils.onUpdateInState(RUNNING, function () {
+    runningTicks++
+})
+
+alecUtils.onStateExited(RUNNING, function () {
+    game.splash("ran for " + runningTicks + " frames")
+    runningTicks = 0
+})
