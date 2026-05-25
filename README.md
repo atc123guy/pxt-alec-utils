@@ -15,9 +15,23 @@ General-purpose utility blocks for MakeCode Arcade games.
 Single global state machine for the whole project. States are defined dynamically — every state-taking block has a dropdown showing the states you've created so far, plus a **+ Create new...** option to add more.
 
 **Managing states (rename / delete):**
-- **Rename or delete a state:** right-click on the state name in any dropdown that uses it. The context menu offers Rename and Delete options. (Same as MakeCode's `SpriteKind`.)
-- **Bulk edit:** switch to JavaScript view → open the **Explorer** panel on the left → open `enums.d.ts`. All your states are listed here in a `namespace StateKind { ... }` block. You can rename, reorder, or delete members directly. Save and the dropdowns update across your project.
-- Renaming a state updates every block that references it — no broken references.
+
+MakeCode does not expose rename/delete in the dropdown for user-defined enums (only the built-in `SpriteKind` gets that UI). To rename or delete states, edit `enums.d.ts` directly:
+
+1. Switch to **JavaScript** view.
+2. Open the **Explorer** panel (collapsible section on the left).
+3. Click **`enums.d.ts`**. You'll see something like:
+   ```typescript
+   namespace StateKind {
+       export const Idle = 1;
+       export const Running = 2;
+       export const Jumping = 3;
+   }
+   ```
+4. Rename, reorder, or delete members directly. Save.
+5. Switch back to Blocks — the dropdowns reflect your changes and any blocks that referenced renamed states update automatically.
+
+If you delete a state that's still referenced by a block somewhere, that block will turn into a placeholder you can re-wire.
 
 - `alecUtils.setState(state)` — transition to a new state. Fires the exit handlers for the old state, then the enter handlers for the new state, then any any-change handlers. Setting the same state is a no-op.
 - `alecUtils.currentState()` — returns the current state value (or `-1` before any state has been set).
