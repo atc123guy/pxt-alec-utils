@@ -1,6 +1,6 @@
 {
     "name": "alecutils",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "General-purpose utility blocks for MakeCode Arcade games.",
     "dependencies": {
         "device": "*"

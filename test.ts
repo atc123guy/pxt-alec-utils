@@ -14,3 +14,28 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
         ", y=" + alecUtils.getComponent(alecUtils.Axis.Y, v)
     )
 })
+
+// State machine demo. Up=Idle, Down=Running.
+// Literal numbers because StateKind enum members only materialize in user projects via the dropdown.
+const IDLE = 0
+const RUNNING = 1
+
+alecUtils.onStateEntered(IDLE, function () {
+    game.splash("entered idle")
+})
+
+alecUtils.onStateEntered(RUNNING, function () {
+    game.splash("entered running")
+})
+
+alecUtils.onAnyStateChange(function (oldState, newState) {
+    console.log("transition " + oldState + " -> " + newState)
+})
+
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    alecUtils.setState(IDLE)
+})
+
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    alecUtils.setState(RUNNING)
+})
