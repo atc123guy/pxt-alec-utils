@@ -14,6 +14,11 @@ General-purpose utility blocks for MakeCode Arcade games.
 
 Single global state machine for the whole project. States are defined dynamically — every state-taking block has a dropdown showing the states you've created so far, plus a **+ Create new...** option to add more.
 
+**Managing states (rename / delete):**
+- **Rename or delete a state:** right-click on the state name in any dropdown that uses it. The context menu offers Rename and Delete options. (Same as MakeCode's `SpriteKind`.)
+- **Bulk edit:** switch to JavaScript view → open the **Explorer** panel on the left → open `enums.d.ts`. All your states are listed here in a `namespace StateKind { ... }` block. You can rename, reorder, or delete members directly. Save and the dropdowns update across your project.
+- Renaming a state updates every block that references it — no broken references.
+
 - `alecUtils.setState(state)` — transition to a new state. Fires the exit handlers for the old state, then the enter handlers for the new state, then any any-change handlers. Setting the same state is a no-op.
 - `alecUtils.currentState()` — returns the current state value (or `-1` before any state has been set).
 - `alecUtils.isInState(state)` — boolean, true while the machine is in this state. Useful inside `if` blocks and update loops.
